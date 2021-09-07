@@ -15,18 +15,8 @@ library(stringr)
 library(tidyr)
 library(janitor)
 library(outputs)
-library(ParallelLogger)
+library(Microsoft365R)
 #--------------------------
-
-#setup log reporting
-logloc <- paste0("//universityofexeteruk.sharepoint.com/sites/ResPI/analysis/Standard reports/Report logs/UKRI OA monthly reporting/", Sys.Date(), "_log.txt")
-
-registerLogger(createLogger(name = "DEFAULT_FILE_LOGGER",
-                            threshold = "TRACE",
-                            appenders = list(createFileAppender(layout = layoutParallel,
-                                                                fileName = logloc))))
-
-Start_time <- Sys.time()
 
 #data import (you need to update on each run to capture latest data)------------------------
 RCUKlinked <- read.xlsx( 
@@ -270,7 +260,7 @@ SummaryUKRI <- CombinedUKRI %>%
 #set up worksheet/book -------------
 
 #create directory to save exports in
-SaveDirectory <- paste0("//universityofexeteruk.sharepoint.com/sites/ResPI/analysis/Standard reports/Open Access/UKRI/",Sys.Date())
+SaveDirectory <- paste0("//universityofexeteruk.sharepoint.com/sites/ResPI/analysis/Data Analysis Request Workings/2021-22/02-Sep/",Sys.Date())
 
 if (file.exists(SaveDirectory)){
   setwd(file.path(SaveDirectory)) 
@@ -465,6 +455,3 @@ wb <- loadWorkbook(
                paste0(SaveDirectory, "/OA non-compliance report.xlsx"),
                overwrite=T)
 
-#close log
-logInfo(paste0("Runtime - ", round(Sys.time()-Start_time, 2)))
-clearLoggers()
